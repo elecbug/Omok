@@ -159,6 +159,9 @@ namespace Server
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
+
+                    Users.Remove(Users.Find(x => x.Socket == socket)!);
+                    socket.Close();
                 }
             }).Start();
         }
