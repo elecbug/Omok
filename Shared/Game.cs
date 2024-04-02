@@ -145,316 +145,318 @@ namespace Shared
 
         public bool FailureMove(int x, int y)
         {
-            Color color = Turn;
-
-            if (color == Color.White)
-            {
-                return false;
-            }
-
-            bool result;
-
-            Map[x, y] = color;
-
-            result = AgamottoEye3(color, x, y) >= 2;
-
-            Map[x, y] = Color.Empty;
-
-            return result;
+            return false;
         }
+        //    Color color = Turn;
 
-        private int AgamottoEye3(Color color, int xx, int yy)
-        {
-            int resultSum = 0;
-            List<Point> usedPoint = new List<Point>();
-            bool[] flag = { false, false, false, false };
+        //    if (color == Color.White)
+        //    {
+        //        return false;
+        //    }
 
-            for (int x = Math.Max(0, xx - 3); x < Math.Min(Map.GetLength(0), xx + 4); x++)
-            {
-                for (int y = Math.Max(0, yy - 3); y < Math.Min(Map.GetLength(1), yy + 4); y++)
-                {
-                    int result = 0;
+        //    bool result;
 
-                    if (Map[x, y] != Color.Empty && usedPoint.FindIndex(p => p.X == x && p.Y == y) == -1)
-                    {
-                        continue;
-                    }
+        //    Map[x, y] = color;
 
-                    Map[x, y] = color;
+        //    result = AgamottoEye3(color, x, y) >= 2;
 
-                    List<Point> case1 = new List<Point>();
-                    List<Point> case2 = new List<Point>();
-                    List<Point> case3 = new List<Point>();
-                    List<Point> case4 = new List<Point>();
+        //    Map[x, y] = Color.Empty;
 
-                    int point1 = flag[0] ? 0 : Case1_33(x, y, case1);
-                    int point2 = flag[1] ? 0 : Case2_33(x, y, case2);
-                    int point3 = flag[2] ? 0 : Case3_33(x, y, case3);
-                    int point4 = flag[3] ? 0 : Case4_33(x, y, case4);
+        //    return result;
+        //}
 
-                    result += point1 + point2 + point3 + point4;
+        //private int AgamottoEye3(Color color, int xx, int yy)
+        //{
+        //    int resultSum = 0;
+        //    List<Point> usedPoint = new List<Point>();
+        //    bool[] flag = { false, false, false, false };
 
-                    if (point1 == 1)
-                    {
-                        usedPoint.Concat(case1);
-                        flag[0] = true;
-                    }
-                    if (point2 == 1)
-                    {
-                        usedPoint.Concat(case2);
-                        flag[1] = true;
-                    }
-                    if (point3 == 1)
-                    {
-                        usedPoint.Concat(case3);
-                        flag[2] = true;
-                    }
-                    if (point4 == 1)
-                    {
-                        usedPoint.Concat(case4);
-                        flag[3] = true;
-                    }
+        //    for (int x = Math.Max(0, xx - 3); x < Math.Min(Map.GetLength(0), xx + 4); x++)
+        //    {
+        //        for (int y = Math.Max(0, yy - 3); y < Math.Min(Map.GetLength(1), yy + 4); y++)
+        //        {
+        //            int result = 0;
 
-                    Map[x, y] = Color.Empty;
+        //            if (Map[x, y] != Color.Empty && usedPoint.FindIndex(p => p.X == x && p.Y == y) == -1)
+        //            {
+        //                continue;
+        //            }
 
-                    resultSum += result;
-                }
-            }
+        //            Map[x, y] = color;
 
-            return resultSum;
-        }
+        //            List<Point> case1 = new List<Point>();
+        //            List<Point> case2 = new List<Point>();
+        //            List<Point> case3 = new List<Point>();
+        //            List<Point> case4 = new List<Point>();
 
-        private int Case1_33(int x, int y, List<Point> points)
-        {
-            Color color = Map[x, y];
+        //            int point1 = flag[0] ? 0 : Case1_33(x, y, case1);
+        //            int point2 = flag[1] ? 0 : Case2_33(x, y, case2);
+        //            int point3 = flag[2] ? 0 : Case3_33(x, y, case3);
+        //            int point4 = flag[3] ? 0 : Case4_33(x, y, case4);
 
-            int sum = 0;
+        //            result += point1 + point2 + point3 + point4;
 
-            int last1x = x + 1, last1y = y;
-            int last2x = x - 1, last2y = y;
+        //            if (point1 == 1)
+        //            {
+        //                usedPoint.Concat(case1);
+        //                flag[0] = true;
+        //            }
+        //            if (point2 == 1)
+        //            {
+        //                usedPoint.Concat(case2);
+        //                flag[1] = true;
+        //            }
+        //            if (point3 == 1)
+        //            {
+        //                usedPoint.Concat(case3);
+        //                flag[2] = true;
+        //            }
+        //            if (point4 == 1)
+        //            {
+        //                usedPoint.Concat(case4);
+        //                flag[3] = true;
+        //            }
 
-            try
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    if (Map[x + i, y] == color)
-                    {
-                        sum++;
-                        last1x = x + i + 1;
-                        last1y = y;
-                        points.Add(new Point(x + i, y));
-                    }
-                    else break;
-                }
-            }
-            catch { }
-            try
-            {
-                for (int i = -1; i > -4; i--)
-                {
-                    if (Map[x + i, y] == color)
-                    {
-                        sum++;
-                        last2x = x + i - 1;
-                        last2y = y;
-                        points.Add(new Point(x + i, y));
-                    }
-                    else break;
-                }
-            }
-            catch { }
+        //            Map[x, y] = Color.Empty;
 
-            if (sum >= 4)
-            {
-                int point = 0;
+        //            resultSum += result;
+        //        }
+        //    }
 
-                try
-                {
-                    point += Map[last1x, last1y] == Color.Empty ? 1 : 0;
-                    point += Map[last2x, last2y] == Color.Empty ? 1 : 0;
-                }
-                catch { }
+        //    return resultSum;
+        //}
 
-                return point >= 2 ? 1 : 0;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-        private int Case2_33(int x, int y, List<Point> points)
-        {
-            Color color = Map[x, y];
+        //private int Case1_33(int x, int y, List<Point> points)
+        //{
+        //    Color color = Map[x, y];
 
-            int sum = 0;
+        //    int sum = 0;
 
-            int last1x = x, last1y = y + 1;
-            int last2x = x, last2y = y - 1;
+        //    int last1x = x + 1, last1y = y;
+        //    int last2x = x - 1, last2y = y;
 
-            try
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    if (Map[x, y + i] == color)
-                    {
-                        sum++;
-                        last1x = x;
-                        last1y = y + i + 1;
-                        points.Add(new Point(x, y + i));
-                    }
-                    else break;
-                }
-            }
-            catch { }
-            try
-            {
-                for (int i = -1; i > -4; i--)
-                {
-                    if (Map[x, y + i] == color)
-                    {
-                        sum++;
-                        last2x = x;
-                        last2y = y + i - 1;
-                        points.Add(new Point(x, y + i));
-                    }
-                    else break;
-                }
-            }
-            catch { }
+        //    try
+        //    {
+        //        for (int i = 0; i < 4; i++)
+        //        {
+        //            if (Map[x + i, y] == color)
+        //            {
+        //                sum++;
+        //                last1x = x + i + 1;
+        //                last1y = y;
+        //                points.Add(new Point(x + i, y));
+        //            }
+        //            else break;
+        //        }
+        //    }
+        //    catch { }
+        //    try
+        //    {
+        //        for (int i = -1; i > -4; i--)
+        //        {
+        //            if (Map[x + i, y] == color)
+        //            {
+        //                sum++;
+        //                last2x = x + i - 1;
+        //                last2y = y;
+        //                points.Add(new Point(x + i, y));
+        //            }
+        //            else break;
+        //        }
+        //    }
+        //    catch { }
 
-            if (sum >= 4)
-            {
-                int point = 0;
+        //    if (sum >= 4)
+        //    {
+        //        int point = 0;
 
-                try
-                {
-                    point += Map[last1x, last1y] == Color.Empty ? 1 : 0;
-                    point += Map[last2x, last2y] == Color.Empty ? 1 : 0;
-                }
-                catch { }
+        //        try
+        //        {
+        //            point += Map[last1x, last1y] == Color.Empty ? 1 : 0;
+        //            point += Map[last2x, last2y] == Color.Empty ? 1 : 0;
+        //        }
+        //        catch { }
 
-                return point >= 2 ? 1 : 0;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-        private int Case3_33(int x, int y, List<Point> points)
-        {
-            Color color = Map[x, y];
+        //        return point >= 2 ? 1 : 0;
+        //    }
+        //    else
+        //    {
+        //        return 0;
+        //    }
+        //}
+        //private int Case2_33(int x, int y, List<Point> points)
+        //{
+        //    Color color = Map[x, y];
 
-            int sum = 0;
+        //    int sum = 0;
 
-            int last1x = x + 1, last1y = y + 1;
-            int last2x = x - 1, last2y = y - 1;
+        //    int last1x = x, last1y = y + 1;
+        //    int last2x = x, last2y = y - 1;
 
-            try
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    if (Map[x + i, y + i] == color)
-                    {
-                        sum++;
-                        last1x = x + i + 1;
-                        last1y = y + i + 1;
-                        points.Add(new Point(x + i, y + i));
-                    }
-                    else break;
-                }
-            }
-            catch { }
-            try
-            {
-                for (int i = -1; i > -4; i--)
-                {
-                    if (Map[x + i, y + i] == color)
-                    {
-                        sum++;
-                        last2x = x + i - 1;
-                        last2y = y + i - 1;
-                        points.Add(new Point(x + i, y + i));
-                    }
-                    else break;
-                }
-            }
-            catch { }
+        //    try
+        //    {
+        //        for (int i = 0; i < 4; i++)
+        //        {
+        //            if (Map[x, y + i] == color)
+        //            {
+        //                sum++;
+        //                last1x = x;
+        //                last1y = y + i + 1;
+        //                points.Add(new Point(x, y + i));
+        //            }
+        //            else break;
+        //        }
+        //    }
+        //    catch { }
+        //    try
+        //    {
+        //        for (int i = -1; i > -4; i--)
+        //        {
+        //            if (Map[x, y + i] == color)
+        //            {
+        //                sum++;
+        //                last2x = x;
+        //                last2y = y + i - 1;
+        //                points.Add(new Point(x, y + i));
+        //            }
+        //            else break;
+        //        }
+        //    }
+        //    catch { }
 
-            if (sum >= 4)
-            {
-                int point = 0;
+        //    if (sum >= 4)
+        //    {
+        //        int point = 0;
 
-                try
-                {
-                    point += Map[last1x, last1y] == Color.Empty ? 1 : 0;
-                    point += Map[last2x, last2y] == Color.Empty ? 1 : 0;
-                }
-                catch { }
+        //        try
+        //        {
+        //            point += Map[last1x, last1y] == Color.Empty ? 1 : 0;
+        //            point += Map[last2x, last2y] == Color.Empty ? 1 : 0;
+        //        }
+        //        catch { }
 
-                return point >= 2 ? 1 : 0;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-        private int Case4_33(int x, int y, List<Point> points)
-        {
-            Color color = Map[x, y];
+        //        return point >= 2 ? 1 : 0;
+        //    }
+        //    else
+        //    {
+        //        return 0;
+        //    }
+        //}
+        //private int Case3_33(int x, int y, List<Point> points)
+        //{
+        //    Color color = Map[x, y];
 
-            int sum = 0;
+        //    int sum = 0;
 
-            int last1x = x + 1, last1y = y - 1;
-            int last2x = x - 1, last2y = y + 1;
+        //    int last1x = x + 1, last1y = y + 1;
+        //    int last2x = x - 1, last2y = y - 1;
 
-            try
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    if (Map[x + i, y - i] == color)
-                    {
-                        sum++;
-                        last1x = x + i + 1;
-                        last1y = y - i - 1;
-                        points.Add(new Point(x + i, y - i));
-                    }
-                    else break;
-                }
-            }
-            catch { }
-            try
-            {
-                for (int i = -1; i > -4; i--)
-                {
-                    if (Map[x + i, y - i] == color)
-                    {
-                        sum++;
-                        last2x = x + i - 1;
-                        last2y = y - i + 1;
-                        points.Add(new Point(x + i, y - i));
-                    }
-                    else break;
-                }
-            }
-            catch { }
+        //    try
+        //    {
+        //        for (int i = 0; i < 4; i++)
+        //        {
+        //            if (Map[x + i, y + i] == color)
+        //            {
+        //                sum++;
+        //                last1x = x + i + 1;
+        //                last1y = y + i + 1;
+        //                points.Add(new Point(x + i, y + i));
+        //            }
+        //            else break;
+        //        }
+        //    }
+        //    catch { }
+        //    try
+        //    {
+        //        for (int i = -1; i > -4; i--)
+        //        {
+        //            if (Map[x + i, y + i] == color)
+        //            {
+        //                sum++;
+        //                last2x = x + i - 1;
+        //                last2y = y + i - 1;
+        //                points.Add(new Point(x + i, y + i));
+        //            }
+        //            else break;
+        //        }
+        //    }
+        //    catch { }
 
-            if (sum >= 4)
-            {
-                int point = 0;
+        //    if (sum >= 4)
+        //    {
+        //        int point = 0;
 
-                try
-                {
-                    point += Map[last1x, last1y] == Color.Empty ? 1 : 0;
-                    point += Map[last2x, last2y] == Color.Empty ? 1 : 0;
-                }
-                catch { }
+        //        try
+        //        {
+        //            point += Map[last1x, last1y] == Color.Empty ? 1 : 0;
+        //            point += Map[last2x, last2y] == Color.Empty ? 1 : 0;
+        //        }
+        //        catch { }
 
-                return point >= 2 ? 1 : 0;
-            }
-            else
-            {
-                return 0;
-            }
-        }
+        //        return point >= 2 ? 1 : 0;
+        //    }
+        //    else
+        //    {
+        //        return 0;
+        //    }
+        //}
+        //private int Case4_33(int x, int y, List<Point> points)
+        //{
+        //    Color color = Map[x, y];
+
+        //    int sum = 0;
+
+        //    int last1x = x + 1, last1y = y - 1;
+        //    int last2x = x - 1, last2y = y + 1;
+
+        //    try
+        //    {
+        //        for (int i = 0; i < 4; i++)
+        //        {
+        //            if (Map[x + i, y - i] == color)
+        //            {
+        //                sum++;
+        //                last1x = x + i + 1;
+        //                last1y = y - i - 1;
+        //                points.Add(new Point(x + i, y - i));
+        //            }
+        //            else break;
+        //        }
+        //    }
+        //    catch { }
+        //    try
+        //    {
+        //        for (int i = -1; i > -4; i--)
+        //        {
+        //            if (Map[x + i, y - i] == color)
+        //            {
+        //                sum++;
+        //                last2x = x + i - 1;
+        //                last2y = y - i + 1;
+        //                points.Add(new Point(x + i, y - i));
+        //            }
+        //            else break;
+        //        }
+        //    }
+        //    catch { }
+
+        //    if (sum >= 4)
+        //    {
+        //        int point = 0;
+
+        //        try
+        //        {
+        //            point += Map[last1x, last1y] == Color.Empty ? 1 : 0;
+        //            point += Map[last2x, last2y] == Color.Empty ? 1 : 0;
+        //        }
+        //        catch { }
+
+        //        return point >= 2 ? 1 : 0;
+        //    }
+        //    else
+        //    {
+        //        return 0;
+        //    }
+        //}
     }
 }
