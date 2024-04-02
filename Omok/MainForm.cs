@@ -13,6 +13,7 @@ namespace Omok
         private LocationButton[,] Buttons { get; set; } = new LocationButton[15, 15];
         private const int EdgeSize = 50;
         private TcpClient? Client { get; set; }
+        private LocationButton? LastMove { get; set; }
 
         public MainForm()
         {
@@ -92,6 +93,14 @@ namespace Omok
 
                                 if (packet.Invalid == false)
                                 {
+                                    if (LastMove != null)
+                                    {
+                                        // LastMove.BorderStyle = BorderStyle.None;
+                                    }
+
+                                    LastMove = Buttons[packet.X, packet.Y];
+                                    // LastMove.BorderStyle = BorderStyle.Fixed3D;
+
                                     Buttons[packet.X, packet.Y].Image = GetImage(packet.Id);
                                 }
 

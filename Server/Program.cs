@@ -120,7 +120,8 @@ namespace Server
 
                                     if (packet.Id == game!.BlackId && game.Turn == Shared.Game.Color.Black)
                                     {
-                                        if (game.Map[packet.X, packet.Y] != Shared.Game.Color.Empty)
+                                        if (game.Map[packet.X, packet.Y] != Shared.Game.Color.Empty
+                                            || game.OpenThree(packet.X, packet.Y))
                                         {
                                             packet.Invalid = true;
                                         }
@@ -140,7 +141,8 @@ namespace Server
                                     }
                                     else if (packet.Id == game!.WhiteId && game.Turn == Shared.Game.Color.White)
                                     {
-                                        if (game.Map[packet.X, packet.Y] != Shared.Game.Color.Empty)
+                                        if (game.Map[packet.X, packet.Y] != Shared.Game.Color.Empty
+                                            || game.OpenThree(packet.X, packet.Y))
                                         {
                                             packet.Invalid = true;
                                         }

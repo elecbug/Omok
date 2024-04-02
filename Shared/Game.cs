@@ -31,7 +31,7 @@ namespace Shared
             return Horizontal(x, y) || Vertical(x, y) || LeftUp(x, y) || RightUp(x, y);
         }
 
-        private bool Horizontal(int x, int y)
+        private bool Horizontal(int x, int y, int line = 5)
         {
             Color color = Map[x, y];
 
@@ -39,7 +39,7 @@ namespace Shared
 
             try
             {
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < line; i++)
                 {
                     if (Map[x + i, y] == color) sum++;
                     else break;
@@ -48,7 +48,7 @@ namespace Shared
             catch { }
             try
             {
-                for (int i = -1; i > -5; i--)
+                for (int i = -1; i > -line; i--)
                 {
                     if (Map[x + i, y] == color) sum++;
                     else break;
@@ -56,10 +56,10 @@ namespace Shared
             }
             catch { }
 
-            return sum >= 5;
+            return sum >= line;
         }
 
-        private bool Vertical(int x, int y)
+        private bool Vertical(int x, int y, int line = 5)
         {
             Color color = Map[x, y];
 
@@ -67,7 +67,7 @@ namespace Shared
 
             try
             {
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < line; i++)
                 {
                     if (Map[x, y + i] == color) sum++;
                     else break;
@@ -76,7 +76,7 @@ namespace Shared
             catch { }
             try
             {
-                for (int i = -1; i > -5; i--)
+                for (int i = -1; i > -line; i--)
                 {
                     if (Map[x, y + i] == color) sum++;
                     else break;
@@ -84,10 +84,10 @@ namespace Shared
             }
             catch { }
 
-            return sum >= 5;
+            return sum >= line;
         }
 
-        private bool LeftUp(int x, int y)
+        private bool LeftUp(int x, int y, int line = 5)
         {
             Color color = Map[x, y];
 
@@ -95,7 +95,7 @@ namespace Shared
 
             try
             {
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < line; i++)
                 {
                     if (Map[x + i, y + i] == color) sum++;
                     else break;
@@ -104,7 +104,7 @@ namespace Shared
             catch { }
             try
             {
-                for (int i = -1; i > -5; i--)
+                for (int i = -1; i > -line; i--)
                 {
                     if (Map[x + i, y + i] == color) sum++;
                     else break;
@@ -112,10 +112,10 @@ namespace Shared
             }
             catch { }
 
-            return sum >= 5;
+            return sum >= line;
         }
 
-        private bool RightUp(int x, int y)
+        private bool RightUp(int x, int y, int line = 5)
         {
             Color color = Map[x, y];
 
@@ -123,7 +123,7 @@ namespace Shared
 
             try
             {
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < line; i++)
                 {
                     if (Map[x + i, y - i] == color) sum++;
                     else break;
@@ -132,7 +132,7 @@ namespace Shared
             catch { }
             try
             {
-                for (int i = -1; i > -5; i--)
+                for (int i = -1; i > -line; i--)
                 {
                     if (Map[x + i, y - i] == color) sum++;
                     else break;
@@ -140,7 +140,15 @@ namespace Shared
             }
             catch { }
 
-            return sum >= 5;
+            return sum >= line;
+        }
+
+        public bool OpenThree(int x, int y)
+        {
+            /// 33이 필요해요
+            /// 
+
+            return false;
         }
     }
 }
