@@ -18,7 +18,7 @@ namespace Server
 
         public static void Main(string[] args)
         {
-            Listener = new TcpListener(IPAddress.Parse("127.0.0.1"), 12356);
+            Listener = new TcpListener(IPEndPoint.Parse(Console.ReadLine()!));
 
             AcceptLoop();
         }
@@ -127,8 +127,15 @@ namespace Server
                                         else
                                         {
                                             game.Map[packet.X, packet.Y] = Shared.Game.Color.Black;
-                                            game.TurnSwap();
+                                            bool win = game.WinCheck(packet.X, packet.Y);
                                             packet.Invalid = false;
+
+                                            if (win)
+                                            {
+                                                packet.WinColor = game.Turn;
+                                            }
+
+                                            game.TurnSwap();
                                         }
                                     }
                                     else if (packet.Id == game!.WhiteId && game.Turn == Shared.Game.Color.White)
@@ -140,8 +147,16 @@ namespace Server
                                         else
                                         {
                                             game.Map[packet.X, packet.Y] = Shared.Game.Color.White;
-                                            game.TurnSwap();
+                                            bool win = game.WinCheck(packet.X, packet.Y);
                                             packet.Invalid = false;
+
+                                            if (win)
+                                            {
+                                                packet.WinColor = game.Turn;
+                                            }
+
+                                            game.TurnSwap();
+
                                         }
                                     }
 

@@ -33,7 +33,7 @@ namespace Omok
         private void ReceiveLoop()
         {
             Client = new TcpClient();
-            Client.Connect(IPEndPoint.Parse("127.0.0.1:12356"));
+            Client.Connect(IPEndPoint.Parse(new StreamReader("ip-port").ReadToEnd()));
 
             while (true)
             {
@@ -48,18 +48,18 @@ namespace Omok
                     {
                         case Shared.Packet.Type.Connect:
                             {
-                                Shared.Packet.Connect json2
+                                Shared.Packet.Connect packet
                                     = JsonSerializer.Deserialize<Shared.Packet.Connect>(Encoding.UTF8.GetString(buffer).Replace("\0", ""))!;
 
-                                Id = json2.Id;
+                                Id = packet.Id;
                             }
                             break;
                         case Shared.Packet.Type.GameStart:
                             {
-                                Shared.Packet.GameStart json3
+                                Shared.Packet.GameStart packet
                                     = JsonSerializer.Deserialize<Shared.Packet.GameStart>(Encoding.UTF8.GetString(buffer).Replace("\0", ""))!;
 
-                                MyColor = json3.MyColor;
+                                MyColor = packet.MyColor;
 
                                 Invoke(() =>
                                 {
@@ -75,8 +75,9 @@ namespace Omok
                                                 Visible = true,
                                                 Size = new Size(EdgeSize, EdgeSize),
                                                 Location = new Point(x * EdgeSize + 10, y * EdgeSize + 10),
-                                                BackgroundImage = Resources.Image.Cross,
-                                                SizeMode = PictureBoxSizeMode.StretchImage,
+                                                Image = Resources.Image.Cross,
+                                                SizeMode = PictureBoxSizeMode.Zoom,
+                                                BackColor = Color.Wheat,
                                             };
                                             Buttons[x, y].Click += ButtonClick;
                                         }
@@ -86,12 +87,19 @@ namespace Omok
                             break;
                         case Shared.Packet.Type.ClientBehaviour:
                             {
-                                Shared.Packet.ClientBehaviour json3
+                                Shared.Packet.ClientBehaviour packet
                                     = JsonSerializer.Deserialize<Shared.Packet.ClientBehaviour>(Encoding.UTF8.GetString(buffer).Replace("\0", ""))!;
 
-                                if (json3.Invalid == false)
+                                if (packet.Invalid == false)
                                 {
-                                    Buttons[json3.X, json3.Y].BackColor = GetColor(json3.Id);
+                                    Buttons[packet.X, packet.Y].Image = GetImage(packet.Id);
+                                }
+
+                                if (packet.WinColor != Shared.Game.Color.Empty)
+                                {
+                                    MessageBox.Show(packet.WinColor.ToString() + " is win!");
+
+                                    Invoke(() => { Close(); });
                                 }
                             }
                             break;
@@ -106,20 +114,20 @@ namespace Omok
             }
         }
 
-        private Color GetColor(int id)
+        private Image GetImage(int id)
         {
             if (id == Id)
             {
-                if (MyColor == Shared.Game.Color.White) return Color.White;
-                if (MyColor == Shared.Game.Color.Black) return Color.Black;
+                if (MyColor == Shared.Game.Color.White) return Resources.Image.White;
+                if (MyColor == Shared.Game.Color.Black) return Resources.Image.Black;
             }
             else
             {
-                if (MyColor == Shared.Game.Color.White) return Color.Black;
-                if (MyColor == Shared.Game.Color.Black) return Color.White;
+                if (MyColor == Shared.Game.Color.White) return Resources.Image.Black;
+                if (MyColor == Shared.Game.Color.Black) return Resources.Image.White;
             }
 
-            return Color.Red;
+            return Resources.Image.Cross;
         }
 
         private void ButtonClick(object? sender, EventArgs e)

@@ -1,4 +1,6 @@
-﻿namespace Shared
+﻿using System.Drawing;
+
+namespace Shared
 {
     public class Packet
     {
@@ -28,6 +30,7 @@
             public int Y { get; set; } = -1;
 
             public bool Invalid { get; set; } = true;
+            public Game.Color WinColor { get; set; } = Game.Color.Empty;
         }
 
         public class Connect : Base

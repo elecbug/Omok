@@ -32,10 +32,9 @@
             // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(9F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1029, 600);
-            Margin = new Padding(4, 4, 4, 4);
+            ClientSize = new Size(800, 450);
             Name = "MainForm";
             Text = "Omok";
             ResumeLayout(false);
