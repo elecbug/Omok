@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -121,13 +122,15 @@ namespace Server
                                     if (packet.Id == game!.BlackId && game.Turn == Shared.Game.Color.Black)
                                     {
                                         if (game.Map[packet.X, packet.Y] != Shared.Game.Color.Empty
-                                            || game.OpenThree(packet.X, packet.Y))
+                                            || game.FailureMove(packet.X, packet.Y))
                                         {
                                             packet.Invalid = true;
                                         }
                                         else
                                         {
                                             game.Map[packet.X, packet.Y] = Shared.Game.Color.Black;
+                                            game.LastMove = new Point(packet.X, packet.Y);
+
                                             bool win = game.WinCheck(packet.X, packet.Y);
                                             packet.Invalid = false;
 
@@ -142,13 +145,15 @@ namespace Server
                                     else if (packet.Id == game!.WhiteId && game.Turn == Shared.Game.Color.White)
                                     {
                                         if (game.Map[packet.X, packet.Y] != Shared.Game.Color.Empty
-                                            || game.OpenThree(packet.X, packet.Y))
+                                            || game.FailureMove(packet.X, packet.Y))
                                         {
                                             packet.Invalid = true;
                                         }
                                         else
                                         {
                                             game.Map[packet.X, packet.Y] = Shared.Game.Color.White;
+                                            game.LastMove = new Point(packet.X, packet.Y);
+
                                             bool win = game.WinCheck(packet.X, packet.Y);
                                             packet.Invalid = false;
 

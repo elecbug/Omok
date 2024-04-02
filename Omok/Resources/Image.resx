@@ -121,10 +121,16 @@
   <data name="Black" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Black.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Black_export" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Black-export.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Cross" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Cross.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="White" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>White.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="White_export" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>White-export.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

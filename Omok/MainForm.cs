@@ -13,7 +13,7 @@ namespace Omok
         private LocationButton[,] Buttons { get; set; } = new LocationButton[15, 15];
         private const int EdgeSize = 50;
         private TcpClient? Client { get; set; }
-        private LocationButton? LastMove { get; set; }
+        private Tuple<LocationButton, Shared.Game.Color>? LastMove { get; set; }
 
         public MainForm()
         {
@@ -95,13 +95,11 @@ namespace Omok
                                 {
                                     if (LastMove != null)
                                     {
-                                        // LastMove.BorderStyle = BorderStyle.None;
+                                        LastMove.Item1.Image = GetImage(LastMove.Item2);
                                     }
 
-                                    LastMove = Buttons[packet.X, packet.Y];
-                                    // LastMove.BorderStyle = BorderStyle.Fixed3D;
-
-                                    Buttons[packet.X, packet.Y].Image = GetImage(packet.Id);
+                                    LastMove = Tuple.Create(Buttons[packet.X, packet.Y], GetColor(packet.Id));
+                                    Buttons[packet.X, packet.Y].Image = GetFirstImage(packet.Id);
                                 }
 
                                 if (packet.WinColor != Shared.Game.Color.Empty)
@@ -123,17 +121,48 @@ namespace Omok
             }
         }
 
-        private Image GetImage(int id)
+        private Shared.Game.Color GetColor(int id)
         {
             if (id == Id)
             {
-                if (MyColor == Shared.Game.Color.White) return Resources.Image.White;
-                if (MyColor == Shared.Game.Color.Black) return Resources.Image.Black;
+                if (MyColor == Shared.Game.Color.White) return Shared.Game.Color.White;
+                if (MyColor == Shared.Game.Color.Black) return Shared.Game.Color.Black;
             }
             else
             {
-                if (MyColor == Shared.Game.Color.White) return Resources.Image.Black;
-                if (MyColor == Shared.Game.Color.Black) return Resources.Image.White;
+                if (MyColor == Shared.Game.Color.White) return Shared.Game.Color.Black;
+                if (MyColor == Shared.Game.Color.Black) return Shared.Game.Color.White;
+            }
+
+            return Shared.Game.Color.Empty;
+
+        }
+
+        private Image GetFirstImage(int id)
+        {
+            if (id == Id)
+            {
+                if (MyColor == Shared.Game.Color.White) return Resources.Image.White_export;
+                if (MyColor == Shared.Game.Color.Black) return Resources.Image.Black_export;
+            }
+            else
+            {
+                if (MyColor == Shared.Game.Color.White) return Resources.Image.Black_export;
+                if (MyColor == Shared.Game.Color.Black) return Resources.Image.White_export;
+            }
+
+            return Resources.Image.Cross;
+        }
+
+        private Image GetImage(Shared.Game.Color color)
+        {
+            if (color == Shared.Game.Color.Black)
+            {
+                return Resources.Image.Black;
+            }
+            else if (color == Shared.Game.Color.White)
+            {
+                return Resources.Image.White;
             }
 
             return Resources.Image.Cross;

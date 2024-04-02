@@ -73,6 +73,16 @@ namespace Omok.Resources {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Black_export {
+            get {
+                object obj = ResourceManager.GetObject("Black_export", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Cross {
             get {
                 object obj = ResourceManager.GetObject("Cross", resourceCulture);
@@ -86,6 +96,16 @@ namespace Omok.Resources {
         internal static System.Drawing.Bitmap White {
             get {
                 object obj = ResourceManager.GetObject("White", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap White_export {
+            get {
+                object obj = ResourceManager.GetObject("White_export", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
