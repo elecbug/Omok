@@ -21,7 +21,8 @@ namespace Shared
         public int WhiteId { get; set; } = 0;
         public Color[,] Map { get; set; } = new Color[15, 15];
         public Color Turn { get; set; } = Color.Black;
-        public Point LastMove { get; set; } = new Point();
+        public bool Canceled { get; set; } = true;
+        public Point? LastMove { get; set; } = null;
 
         public void TurnSwap()
         {

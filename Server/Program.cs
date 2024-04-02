@@ -129,6 +129,7 @@ namespace Server
                                         else
                                         {
                                             game.Map[packet.X, packet.Y] = Shared.Game.Color.Black;
+                                            game.Canceled = false;
                                             game.LastMove = new Point(packet.X, packet.Y);
 
                                             bool win = game.WinCheck(packet.X, packet.Y);
@@ -152,6 +153,7 @@ namespace Server
                                         else
                                         {
                                             game.Map[packet.X, packet.Y] = Shared.Game.Color.White;
+                                            game.Canceled = false;
                                             game.LastMove = new Point(packet.X, packet.Y);
 
                                             bool win = game.WinCheck(packet.X, packet.Y);
@@ -163,13 +165,59 @@ namespace Server
                                             }
 
                                             game.TurnSwap();
-
                                         }
                                     }
 
                                     foreach (var user in users)
                                     {
                                         string json2 = JsonSerializer.Serialize(packet);
+                                        buffer = Encoding.UTF8.GetBytes(json2);
+                                        user.Socket!.Send(buffer);
+                                    }
+                                }
+                                break;
+                            case Shared.Packet.Type.ReDo:
+                                {
+                                    Shared.Packet.ReDo packet
+                                        = JsonSerializer.Deserialize<Shared.Packet.ReDo>(str)!;
+
+                                    Shared.Game? game = Games.Find(x => x.BlackId == packet.Id || x.WhiteId == packet.Id);
+
+                                    if (game!.Canceled == true)
+                                    {
+                                        break;
+                                    }
+
+                                    User[] users = Users.FindAll(x => x.Id == game!.BlackId || x.Id == game!.WhiteId).ToArray();
+
+                                    Shared.Packet.ReDoOk packet2 = new Shared.Packet.ReDoOk()
+                                    {
+                                        Id = packet.Id,
+                                        Cancel = true,
+                                    };
+
+                                    if (packet.Id == game!.BlackId && game.Turn == Shared.Game.Color.White)
+                                    {
+                                        packet2.Cancel = false;
+                                        game!.TurnSwap();
+                                        game!.Canceled = true;
+                                        game!.Map[game!.LastMove!.Value.X, game!.LastMove!.Value.Y] 
+                                            = Shared.Game.Color.Empty;
+                                        game!.LastMove = null;
+                                    }
+                                    else if (packet.Id == game!.WhiteId && game.Turn == Shared.Game.Color.Black)
+                                    {
+                                        packet2.Cancel = false;
+                                        game!.TurnSwap();
+                                        game!.Canceled = true;
+                                        game!.Map[game!.LastMove!.Value.X, game!.LastMove!.Value.Y] 
+                                            = Shared.Game.Color.Empty;
+                                        game!.LastMove = null;
+                                    }
+
+                                    foreach (var user in users)
+                                    {
+                                        string json2 = JsonSerializer.Serialize(packet2);
                                         buffer = Encoding.UTF8.GetBytes(json2);
                                         user.Socket!.Send(buffer);
                                     }

@@ -14,6 +14,7 @@ namespace Omok
         private const int EdgeSize = 50;
         private TcpClient? Client { get; set; }
         private Tuple<LocationButton, Shared.Game.Color>? LastMove { get; set; }
+        private Tuple<LocationButton, Shared.Game.Color>? LastLastMove { get; set; }
 
         public MainForm()
         {
@@ -23,7 +24,21 @@ namespace Omok
 
             new Thread(ReceiveLoop).Start();
 
-            this.Closed += MainFormClosed;
+            Closed += MainFormClosed;
+            KeyDown += MainFormKeyDown;
+        }
+
+        private void MainFormKeyDown(object? sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Z)
+            {
+                string json = JsonSerializer.Serialize(new Shared.Packet.ReDo() 
+                {
+                    Id = Id,
+                });
+                byte[] buffer = Encoding.UTF8.GetBytes(json);
+                Client!.GetStream().Write(buffer);
+            }
         }
 
         private void MainFormClosed(object? sender, EventArgs e)
@@ -95,11 +110,12 @@ namespace Omok
                                 {
                                     if (LastMove != null)
                                     {
+                                        LastLastMove = Tuple.Create(LastMove.Item1, LastMove.Item2);
                                         LastMove.Item1.Image = GetImage(LastMove.Item2);
                                     }
 
                                     LastMove = Tuple.Create(Buttons[packet.X, packet.Y], GetColor(packet.Id));
-                                    Buttons[packet.X, packet.Y].Image = GetFirstImage(packet.Id);
+                                    Buttons[packet.X, packet.Y].Image = GetMoveImage(packet.Id);
                                 }
 
                                 if (packet.WinColor != Shared.Game.Color.Empty)
@@ -107,6 +123,29 @@ namespace Omok
                                     MessageBox.Show(packet.WinColor.ToString() + " is win!");
 
                                     Invoke(() => { Close(); });
+                                }
+                            }
+                            break;
+                        case Shared.Packet.Type.ReDoOk:
+                            {
+                                Shared.Packet.ReDoOk packet
+                                    = JsonSerializer.Deserialize<Shared.Packet.ReDoOk>(Encoding.UTF8.GetString(buffer).Replace("\0", ""))!;
+
+                                if (packet.Cancel == true)
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    if (LastMove != null)
+                                    {
+                                        LastMove.Item1.Image = Resources.Image.Cross;
+
+                                        LastMove = LastLastMove;
+                                        LastLastMove = null;
+
+                                        LastMove!.Item1.Image = GetReverseMoveImage(packet.Id);
+                                    }
                                 }
                             }
                             break;
@@ -119,6 +158,22 @@ namespace Omok
                     break;
                 }
             }
+        }
+
+        private Image GetReverseMoveImage(int id)
+        {
+            if (id != Id)
+            {
+                if (MyColor == Shared.Game.Color.White) return Resources.Image.White_export;
+                if (MyColor == Shared.Game.Color.Black) return Resources.Image.Black_export;
+            }
+            else
+            {
+                if (MyColor == Shared.Game.Color.White) return Resources.Image.Black_export;
+                if (MyColor == Shared.Game.Color.Black) return Resources.Image.White_export;
+            }
+
+            return Resources.Image.Cross;
         }
 
         private Shared.Game.Color GetColor(int id)
@@ -138,7 +193,7 @@ namespace Omok
 
         }
 
-        private Image GetFirstImage(int id)
+        private Image GetMoveImage(int id)
         {
             if (id == Id)
             {

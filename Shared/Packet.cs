@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace Shared
+﻿namespace Shared
 {
     public class Packet
     {
@@ -10,6 +8,8 @@ namespace Shared
             Connect,
             GameStart,
             ClientBehaviour,
+            ReDo,
+            ReDoOk,
         }
 
         public class Base
@@ -52,6 +52,27 @@ namespace Shared
 
             public int EnemyId { get; set; } = 0;
             public Game.Color MyColor { get; set; } = Game.Color.Empty;
+        }
+
+        public class ReDo: Base
+        {
+            public ReDo()
+            {
+                Type = Type.ReDo;
+            }
+
+            public int Id { get; set; } = 0;
+        }
+
+        public class ReDoOk : Base
+        {
+            public ReDoOk()
+            {
+                Type = Type.ReDoOk;
+            }
+
+            public int Id { get; set; } = 0;
+            public bool Cancel { get; set; } = true;
         }
     }
 }
