@@ -75,7 +75,7 @@ namespace Omok
                                                 Visible = true,
                                                 Size = new Size(EdgeSize, EdgeSize),
                                                 Location = new Point(x * EdgeSize + 10, y * EdgeSize + 10),
-                                                Image = Resources.Image.Cross,
+                                                BackgroundImage = Resources.Image.Cross,
                                                 SizeMode = PictureBoxSizeMode.StretchImage,
                                             };
                                             Buttons[x, y].Click += ButtonClick;
