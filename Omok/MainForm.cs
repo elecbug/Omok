@@ -21,11 +21,12 @@ namespace Omok
             InitializeComponent();
 
             ClientSize = new Size(770, 770);
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Closed += MainFormClosed;
+            KeyDown += MainFormKeyDown;
 
             new Thread(ReceiveLoop).Start();
 
-            Closed += MainFormClosed;
-            KeyDown += MainFormKeyDown;
         }
 
         private void MainFormKeyDown(object? sender, KeyEventArgs e)
