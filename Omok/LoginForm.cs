@@ -12,9 +12,34 @@ namespace Omok
 {
     public partial class LoginForm : Form
     {
+        private Button GameStartButton { get; set; }
+
         public LoginForm()
         {
             InitializeComponent();
+
+            ClientSize = new Size(400, 600);
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+
+            GameStartButton = new Button()
+            {
+                Parent = this,
+                Visible = true,
+                Location = new Point(10, 560),
+                Size = new Size(380, 30),
+            };
+            GameStartButton.Click += GameStartButtonClick;
+        }
+
+        private void GameStartButtonClick(object? sender, EventArgs e)
+        {
+            MainForm form = new MainForm();
+
+            Hide();
+
+            form.ShowDialog();
+
+            Show();
         }
     }
 }

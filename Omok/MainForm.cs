@@ -49,15 +49,22 @@ namespace Omok
 
         private void ReceiveLoop()
         {
-            Client = new TcpClient();
-            Client.Connect(IPEndPoint.Parse(new StreamReader("ip-port").ReadToEnd()));
+            try
+            {
+                Client = new TcpClient();
+                Client.Connect(IPEndPoint.Parse(new StreamReader("ip-port").ReadToEnd()));
+            }
+            catch
+            {
+                Invoke(Close);
+            }
 
             while (true)
             {
                 try
                 {
                     byte[] buffer = new byte[1024];
-                    Client.GetStream().Read(buffer);
+                    Client!.GetStream().Read(buffer);
 
                     Shared.Packet.Base json = JsonSerializer.Deserialize<Shared.Packet.Base>(Encoding.UTF8.GetString(buffer).Replace("\0", ""))!;
 
