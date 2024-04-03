@@ -230,7 +230,25 @@ namespace Server
                 {
                     Console.WriteLine(ex);
 
-                    Users.Remove(Users.Find(x => x.Socket == socket)!);
+                    User user = Users.Find(x => x.Socket == socket)!;
+                    Users.Remove(user);
+
+                    Shared.Game? game = Games.Find(x => x.BlackId == user.Id || x.WhiteId == user.Id);
+
+                    if (game != null)
+                    {
+                        int enemyId = game.BlackId == user.Id ? game.WhiteId : game.BlackId;
+
+                        User enemy = Users.Find(x => x.Id == enemyId)!;
+
+                        string json = JsonSerializer.Serialize(new Shared.Packet.EnemyFailure());
+                        byte[] buffer = Encoding.UTF8.GetBytes(json);
+                        enemy.Socket!.Send(buffer);
+
+                        Users.Remove(enemy);
+                        Games.Remove(game);
+                    }
+
                     socket.Close();
                 }
             }).Start();

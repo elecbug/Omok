@@ -10,6 +10,7 @@
             ClientBehaviour,
             ReDo,
             ReDoOk,
+            EnemyFailure,
         }
 
         public class Base
@@ -73,6 +74,14 @@
 
             public int Id { get; set; } = 0;
             public bool Cancel { get; set; } = true;
+        }
+
+        public class EnemyFailure : Base
+        {
+            public EnemyFailure()
+            {
+                Type = Type.EnemyFailure;
+            }
         }
     }
 }

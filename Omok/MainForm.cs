@@ -8,6 +8,7 @@ namespace Omok
 {
     public partial class MainForm : Form
     {
+        private LoginForm LoginForm { get; set; }
         private int Id { get; set; } = 0;
         private Shared.Game.Color MyColor { get; set; }
         private LocationButton[,] Buttons { get; set; } = new LocationButton[15, 15];
@@ -16,17 +17,23 @@ namespace Omok
         private Tuple<LocationButton, Shared.Game.Color>? LastMove { get; set; }
         private Tuple<LocationButton, Shared.Game.Color>? LastLastMove { get; set; }
 
-        public MainForm()
+        public MainForm(LoginForm form)
         {
             InitializeComponent();
 
             ClientSize = new Size(770, 770);
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
+
+            LoginForm = form;
+
             Closed += MainFormClosed;
             KeyDown += MainFormKeyDown;
+            Load += MainFormLoad;
+        }
 
+        private void MainFormLoad(object? sender, EventArgs e)
+        {
             new Thread(ReceiveLoop).Start();
-
         }
 
         private void MainFormKeyDown(object? sender, KeyEventArgs e)
@@ -45,6 +52,7 @@ namespace Omok
         private void MainFormClosed(object? sender, EventArgs e)
         {
             Client!.Close();
+            LoginForm.Show();
         }
 
         private void ReceiveLoop()
@@ -130,7 +138,7 @@ namespace Omok
                                 {
                                     MessageBox.Show(packet.WinColor.ToString() + " is win!");
 
-                                    Invoke(() => { Close(); });
+                                    Invoke(Close);
                                 }
                             }
                             break;
@@ -155,6 +163,16 @@ namespace Omok
                                         LastMove!.Item1.Image = GetReverseMoveImage(packet.Id);
                                     }
                                 }
+                            }
+                            break;
+                        case Shared.Packet.Type.EnemyFailure:
+                            {
+                                Shared.Packet.EnemyFailure packet
+                                    = JsonSerializer.Deserialize<Shared.Packet.EnemyFailure>(Encoding.UTF8.GetString(buffer).Replace("\0", ""))!;
+
+                                MessageBox.Show("Enemy has left!");
+
+                                Invoke(Close);
                             }
                             break;
                     }
