@@ -159,8 +159,10 @@ namespace Omok
 
                                         LastMove = LastLastMove;
                                         LastLastMove = null;
-
-                                        LastMove!.Item1.Image = GetReverseMoveImage(packet.Id);
+                                        if (LastMove != null)
+                                        {
+                                            LastMove.Item1.Image = GetReverseMoveImage(packet.Id);
+                                        }
                                     }
                                 }
                             }
